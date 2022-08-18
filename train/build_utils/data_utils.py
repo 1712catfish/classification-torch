@@ -25,5 +25,6 @@ class MayoDataset(torch.utils.data.dataset.Dataset):
         label = torch.Tensor([S2I_LBL_MAP[label]]).long()
         if self.target_transform is not None:
             label = self.target_transform(label)
+        label = torch.reshape(label, (-1,)).float()
 
         return image, label

@@ -4,11 +4,17 @@ except Exception:
     from setup_configs import *
 
 
-def get_pretrain_efficient(name, checkpoint=None):
-    model = EfficientNet.from_name(name)
+def get_pretrain_efficient(model_name, checkpoint=None):
+    model = EfficientNet.from_name(model_name)
     if checkpoint is not None:
         checkpoint = torch.load(checkpoint)
         model.load_state_dict(checkpoint)
+    return model
+
+
+def build_efficient_net(model_name, num_classes, checkpoint=None):
+    model = get_pretrain_efficient(model_name, checkpoint=checkpoint)
+    model._fc.out_features = num_classes
     return model
 
 
