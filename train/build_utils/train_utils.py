@@ -1,3 +1,5 @@
+import torch
+
 try:
     INTERACTIVE
 except Exception:
@@ -16,6 +18,12 @@ def build_efficient_net(model_name, num_classes, checkpoint=None):
     model = get_pretrain_efficient(model_name, checkpoint=checkpoint)
     model._fc = nn.Linear(in_features=model._fc.in_features, out_features=num_classes, bias=True)
     return model
+
+
+def hits(output, label):
+    pred = torch.argmax(output, dim=1).data
+    true = torch.argmax(label, dim=1).data
+    return torch.sum(pred == true).item()
 
 
 def run_one_epoch(model, loader, steps, optimizer, criterion, train=True):
@@ -39,8 +47,7 @@ def run_one_epoch(model, loader, steps, optimizer, criterion, train=True):
                 optimizer.step()
 
             epoch_loss += loss.item() * len(output)
-            _, preds = torch.max(output, 1)
-            epoch_acc += torch.sum(preds == label_batch.data)
+            epoch_acc += hits(output, label_batch)
 
     data_size = len(loader.dataset)
     epoch_loss = epoch_loss / data_size
