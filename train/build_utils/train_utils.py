@@ -46,14 +46,6 @@ def run_one_epoch(model, loader, steps, optimizer, criterion, train=True):
         return epoch_loss, epoch_acc
 
 
-def train_one_epoch(model, train_loader, steps, optimizer, criterion):
-    return run_one_epoch(model, train_loader, steps, optimizer, criterion, train=True)
-
-
-def evaluate_one_epoch(model, val_loader, steps, criterion):
-    return run_one_epoch(model, val_loader, steps, None, criterion, train=False)
-
-
 def train(model, train_loader, val_loader,
           epochs, steps_per_epoch, validation_steps,
           criterion, optimizer):
@@ -63,12 +55,20 @@ def train(model, train_loader, val_loader,
         print(f'Epoch {epoch + 1}/{epochs}')
         model.cuda()
 
-        model, optimizer, train_loss, train_acc = train_one_epoch(model, train_loader,
-                                                                  steps_per_epoch,
-                                                                  optimizer, criterion)
+        model, optimizer, train_loss, train_acc = run_one_epoch(model=model,
+                                                                loader=train_loader,
+                                                                steps=steps_per_epoch,
+                                                                optimizer=optimizer,
+                                                                criterion=criterion,
+                                                                train=True)
         print(f'Training loss: {train_loss:.4f | Training accuracy: {train_acc:.4f}}')
 
-        val_loss, val_acc = evaluate_one_epoch(model, val_loader, validation_steps, criterion)
+        val_loss, val_acc = run_one_epoch(model=model,
+                                          loader=val_loader,
+                                          steps=validation_steps,
+                                          optimizer=None,
+                                          criterion=criterion,
+                                          train=False)
         print(f'Evaluation loss: {val_loss:.4f | Training accuracy: {val_acc:.4f}}')
 
         if val_acc > best_acc:
