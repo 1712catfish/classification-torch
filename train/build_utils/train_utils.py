@@ -1,5 +1,3 @@
-import torch
-
 try:
     INTERACTIVE
 except Exception:
@@ -20,7 +18,7 @@ def build_efficient_net(model_name, num_classes, checkpoint=None):
     return model
 
 
-def calculate_correct_predictions(output, label):
+def count_correct_predictions(output, label):
     pred = torch.argmax(output, dim=1).data
     true = torch.argmax(label, dim=1).data
     return torch.sum(pred == true).item()
@@ -36,7 +34,8 @@ def run_one_epoch(model, loader, steps, optimizer, criterion, train=True):
     for image_batch, label_batch in tqdm(iter(loader), total=steps):
         image_batch, label_batch = image_batch.cuda(), label_batch.cuda()
 
-        optimizer.zero_grad()
+        if train:
+            optimizer.zero_grad()
 
         with torch.set_grad_enabled(train):
             output = model(image_batch)
@@ -47,7 +46,7 @@ def run_one_epoch(model, loader, steps, optimizer, criterion, train=True):
                 optimizer.step()
 
             epoch_loss += loss.item() * len(output)
-            epoch_acc += calculate_correct_predictions(output, label_batch)
+            epoch_acc += count_correct_predictions(output, label_batch)
 
     data_size = len(loader.dataset)
     epoch_loss = epoch_loss / data_size

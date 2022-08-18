@@ -16,7 +16,7 @@ train_loader = torch.utils.data.DataLoader(
                 transform=transform['train'],
                 target_transform=target_transfrom),
     batch_size=BATCH_SIZE,
-    shuffle=True,
+    shuffle=True, drop_last=True,
     num_workers=2
 )
 val_loader = torch.utils.data.DataLoader(
