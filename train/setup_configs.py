@@ -30,7 +30,7 @@ transform = {
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]),
     'val': transforms.Compose([
-        transforms.Resize(1.5 * IMAGE_SHAPE[0]),
+        transforms.Resize(int(1.5 * IMAGE_SHAPE[0])),
         transforms.CenterCrop(IMAGE_SHAPE[0]),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])

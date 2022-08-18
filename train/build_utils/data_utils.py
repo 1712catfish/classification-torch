@@ -3,6 +3,7 @@ try:
 except Exception:
     from setup_configs import *
 
+
 class MayoDataset(torch.utils.data.dataset.Dataset):
     def __init__(self, root, df, transform=None, target_transform=None):
         self.root = root
@@ -16,9 +17,8 @@ class MayoDataset(torch.utils.data.dataset.Dataset):
 
     def __getitem__(self, index):
         image_id, label = self.data[index]
-        image = cv2.imread(os.path.join(self.root, image_id + '.jpg'))
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        image = cv2.resize(image, (512, 512)).transpose(2, 0, 1)
+
+        image = Image.open(os.path.join(self.root, image_id + '.jpg'))
         if self.transform is not None:
             image = self.transform(image)
 
