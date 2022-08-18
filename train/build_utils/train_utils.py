@@ -28,11 +28,10 @@ def run_one_epoch(model, loader, steps, optimizer, criterion, train=True):
     assert not (train and criterion is None)
 
     model.train() if train else model.eval()
+    pbar = tf.keras.utils.Progbar(steps) if train else None
     epoch_loss = 0.0
     epoch_acc = 0.0
 
-    if train:
-        pbar = tf.keras.utils.Progbar(steps)
     for image_batch, label_batch in iter(loader):
         image_batch, label_batch = image_batch.cuda(), label_batch.cuda()
 
@@ -51,8 +50,8 @@ def run_one_epoch(model, loader, steps, optimizer, criterion, train=True):
             batch_acc = count_correct_predictions(output, label_batch)
             epoch_acc += batch_acc
 
-            if train:
-                pbar.add(1, values=[('loss', loss.item()), ('acc', batch_acc)])
+            if pbar is not None:
+                pbar.add(1, values=[('loss', loss.item()), ('acc', batch_acc / BATCH_SIZE)])
 
     data_size = len(loader.dataset)
     epoch_loss = epoch_loss / data_size
@@ -79,7 +78,7 @@ def train(model, train_loader, val_loader,
                                                                 optimizer=optimizer,
                                                                 criterion=criterion,
                                                                 train=True)
-        print(f'Training loss: {train_loss:.4f} | Training accuracy: {train_acc:.4f}')
+        print(f'\nTraining loss: {train_loss:.4f} | Training accuracy: {train_acc:.4f}')
 
         val_loss, val_acc = run_one_epoch(model=model,
                                           loader=val_loader,
@@ -87,12 +86,13 @@ def train(model, train_loader, val_loader,
                                           optimizer=None,
                                           criterion=criterion,
                                           train=False)
-        print(f'Evaluation loss: {val_loss:.4f} | Training accuracy: {val_acc:.4f}')
+        print(f'Validation loss: {val_loss:.4f} | Validation accuracy: {val_acc:.4f}')
 
         if val_acc > best_acc:
-            traced = torch.jit.trace(model.cpu(), torch.rand(1, 3, 512, 512))
-            traced.save('efficientnet_model.pth')
+            # traced = torch.jit.trace(model.cpu(), torch.rand(1, 3, IMAGE_SHAPE[0], IMAGE_SHAPE[0]))
+            # traced.save('efficientnet_model.pth')
             best_acc = val_acc
+            torch.save(model.state_dict(), STATE_DICT_SAVE_PATH)
 
         history['loss'].append(train_loss)
         history['acc'].append(train_acc)

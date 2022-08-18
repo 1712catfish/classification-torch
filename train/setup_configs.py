@@ -39,5 +39,6 @@ transform = {
 
 # TRAINING CONFIGS
 BACKBONE = 'efficientnet-b4'
+STATE_DICT_SAVE_PATH = 'efficientnet_model.pth'
 CHECKPOINT = '/kaggle/input/efficientnet-pytorch/efficientnet-b4-e116e8b3.pth'
 INITIAL_LEARNING_RATE = 1e-4
