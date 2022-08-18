@@ -16,7 +16,8 @@ class MayoDataset(torch.utils.data.dataset.Dataset):
 
     def __getitem__(self, index):
         image_id, label = self.data[index]
-        image = Image.open(os.path.join(self.root, image_id + '.jpg'))
+        image = cv2.imread(os.path.join(self.root, image_id + '.jpg'))
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image = cv2.resize(image, (512, 512)).transpose(2, 0, 1)
         if self.transform is not None:
             image = self.transform(image)
