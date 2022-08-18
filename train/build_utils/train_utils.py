@@ -47,12 +47,12 @@ def run_one_epoch(model, loader, steps, optimizer, criterion, train=True):
                 loss.backward()
                 optimizer.step()
 
-
             epoch_loss += loss.item() * len(output)
-            epoch_acc += count_correct_predictions(output, label_batch)
+            batch_acc = count_correct_predictions(output, label_batch)
+            epoch_acc += batch_acc
 
             if train:
-                pbar.add(1, values=[('loss', epoch_loss), ('acc', epoch_acc)])
+                pbar.add(1, values=[('loss', loss.item()), ('acc', batch_acc)])
 
     data_size = len(loader.dataset)
     epoch_loss = epoch_loss / data_size
