@@ -5,9 +5,9 @@ except Exception:
 
 
 def get_pretrain_efficient(name, checkpoint=None):
-    model = efficientnet_pytorch.EfficientNet.from_name(name)
+    model = EfficientNet.from_name(name)
     if checkpoint is not None:
-        checkpoint = torch.load()
+        checkpoint = torch.load(checkpoint)
         model.load_state_dict(checkpoint)
     return model
 
@@ -19,8 +19,8 @@ def run_one_epoch(model, loader, steps, optimizer, criterion, train=True):
     epoch_loss = 0.0
     epoch_acc = 0.0
 
-    for step in tqdm(range(steps)):
-        image_batch, label_batch = next(loader)
+    data_iter = iter(loader)
+    for image_batch, label_batch in tqdm(data_iter, total=steps):
         image_batch, label_batch = image_batch.cuda(), label_batch.cuda()
 
         optimizer.zero_grad()
