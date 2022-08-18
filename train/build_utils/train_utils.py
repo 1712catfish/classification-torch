@@ -81,7 +81,7 @@ def train(model, train_loader, val_loader,
                                           optimizer=None,
                                           criterion=criterion,
                                           train=False)
-        print(f'Evaluation loss: {val_loss:.4f | Training accuracy: {val_acc:.4f}}')
+        print(f'Evaluation loss: {val_loss:.4f} | Training accuracy: {val_acc:.4f}')
 
         if val_acc > best_acc:
             traced = torch.jit.trace(model.cpu(), torch.rand(1, 3, 512, 512))
