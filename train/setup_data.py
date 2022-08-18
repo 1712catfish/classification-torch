@@ -45,3 +45,7 @@ val_loader = torch.utils.data.DataLoader(
 
 STEPS_PER_EPOCH = len(train_df) // BATCH_SIZE
 VALIDATION_STEPS = len(val_df) // BATCH_SIZE + 1
+
+print(f'Found {len(train_df)} training datapoints.')
+print(f'Found {len(val_df)} validation datapoints.')
+
