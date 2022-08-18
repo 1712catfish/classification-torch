@@ -20,7 +20,7 @@ def build_efficient_net(model_name, num_classes, checkpoint=None):
     return model
 
 
-def hits(output, label):
+def calculate_correct_predictions(output, label):
     pred = torch.argmax(output, dim=1).data
     true = torch.argmax(label, dim=1).data
     return torch.sum(pred == true).item()
@@ -47,7 +47,7 @@ def run_one_epoch(model, loader, steps, optimizer, criterion, train=True):
                 optimizer.step()
 
             epoch_loss += loss.item() * len(output)
-            epoch_acc += hits(output, label_batch)
+            epoch_acc += calculate_correct_predictions(output, label_batch)
 
     data_size = len(loader.dataset)
     epoch_loss = epoch_loss / data_size
