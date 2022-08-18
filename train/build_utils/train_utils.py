@@ -74,7 +74,7 @@ def train(model, train_loader, val_loader,
                                                                 optimizer=optimizer,
                                                                 criterion=criterion,
                                                                 train=True)
-        print(f'Training loss: {train_loss:.4f | Training accuracy: {train_acc:.4f}}')
+        print(f'Training loss: {train_loss:.4f} | Training accuracy: {train_acc:.4f}')
 
         val_loss, val_acc = run_one_epoch(model=model,
                                           loader=val_loader,
