@@ -31,6 +31,8 @@ def run_one_epoch(model, loader, steps, optimizer, criterion, train=True):
     epoch_loss = 0.0
     epoch_acc = 0.0
 
+    if train:
+        pbar = tf.keras.utils.Progbar(steps)
     for image_batch, label_batch in tqdm(iter(loader), total=steps):
         image_batch, label_batch = image_batch.cuda(), label_batch.cuda()
 
@@ -45,8 +47,12 @@ def run_one_epoch(model, loader, steps, optimizer, criterion, train=True):
                 loss.backward()
                 optimizer.step()
 
+
             epoch_loss += loss.item() * len(output)
             epoch_acc += count_correct_predictions(output, label_batch)
+
+            if train:
+                pbar.add(1, values=[('loss', epoch_loss), ('acc', epoch_acc)])
 
     data_size = len(loader.dataset)
     epoch_loss = epoch_loss / data_size
