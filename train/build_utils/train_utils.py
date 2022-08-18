@@ -14,7 +14,7 @@ def get_pretrain_efficient(model_name, checkpoint=None):
 
 def build_efficient_net(model_name, num_classes, checkpoint=None):
     model = get_pretrain_efficient(model_name, checkpoint=checkpoint)
-    model._fc.out_features = num_classes
+    model._fc = nn.Linear(in_features=model._fc.in_features, out_features=num_classes, bias=True)
     return model
 
 
