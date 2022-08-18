@@ -33,7 +33,7 @@ def run_one_epoch(model, loader, steps, optimizer, criterion, train=True):
 
     if train:
         pbar = tf.keras.utils.Progbar(steps)
-    for image_batch, label_batch in tqdm(iter(loader), total=steps):
+    for image_batch, label_batch in iter(loader):
         image_batch, label_batch = image_batch.cuda(), label_batch.cuda()
 
         if train:
