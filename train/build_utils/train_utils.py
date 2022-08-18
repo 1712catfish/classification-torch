@@ -19,6 +19,8 @@ def run_one_epoch(model, loader, steps, optimizer, criterion, train=True):
     epoch_loss = 0.0
     epoch_acc = 0.0
 
+    print(loader)
+
     for image_batch, label_batch in iter(loader):
         image_batch, label_batch = image_batch.cuda(), label_batch.cuda()
 
