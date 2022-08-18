@@ -21,6 +21,7 @@ from torch.optim import lr_scheduler
 from einops.layers.torch import Rearrange
 from efficientnet_pytorch import EfficientNet
 from PIL import Image
+from torchvision import datasets, models, transforms
 import torch.utils.data
 import torch
 from sklearn.model_selection import train_test_split
