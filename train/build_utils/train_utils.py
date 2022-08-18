@@ -19,8 +19,7 @@ def run_one_epoch(model, loader, steps, optimizer, criterion, train=True):
     epoch_loss = 0.0
     epoch_acc = 0.0
 
-    data_iter = iter(loader)
-    for image_batch, label_batch in tqdm(data_iter, total=steps):
+    for image_batch, label_batch in iter(loader):
         image_batch, label_batch = image_batch.cuda(), label_batch.cuda()
 
         optimizer.zero_grad()
@@ -55,14 +54,9 @@ def evaluate_one_epoch(model, val_loader, steps, criterion):
     return run_one_epoch(model, val_loader, steps, None, criterion, train=False)
 
 
-def train(model,
-          train_loader,
-          val_loader,
-          epochs,
-          steps_per_epoch,
-          validation_steps,
-          criterion,
-          optimizer):
+def train(model, train_loader, val_loader,
+          epochs, steps_per_epoch, validation_steps,
+          criterion, optimizer):
     best_acc = 0.0
     history = dict.fromkeys(['loss', 'acc', 'val_loss', 'val_acc'], [])
     for epoch in range(epochs):
