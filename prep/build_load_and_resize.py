@@ -44,7 +44,7 @@ def process(d):
         return idd, rasterio_load(os.path.join(d['INPUT_PATH'], idd + '.tif'), MIN_LENGTH=1024)
 
     with tqdm(total=len(d['DATA'])) as pbar:
-        for iid, image in map(custom_load, d['DATA']):
+        for iid, image in fast_map(custom_load, d['DATA'], threads_limit=d['THREADS_LIMIT']):
             print(image.shape)
             rasterio_save(os.path.join(d['OUTPUT_PATH'], iid + 'png'), image)
             gc.collect()
