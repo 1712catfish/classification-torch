@@ -70,4 +70,5 @@ def get_base_kaggle_config():
         INPUT_PATH='../input/mayo-clinic-strip-ai/train',
         OUTPUT_PATH='data',
         N_SHARDS=4,
+        THEADS_LIMIT=16
     )
