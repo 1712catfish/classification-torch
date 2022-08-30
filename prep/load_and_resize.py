@@ -51,10 +51,11 @@ def process(d):
             pbar.update()
 
 
-def run(CONFIG):
+def sys_load_and_resize(CONFIG):
     df = pd.read_csv(os.path.join(CONFIG['CSV_PATH'], 'train.csv'))
     ids = df['image_id']
-    i, j = len(ids) * CONFIG['SHARD_ID'], len(ids) * (CONFIG['SHARD_ID'] + 1)
+    i = len(ids) // CONFIG['NUM_SHARD'] * CONFIG['SHARD_ID']
+    j = len(ids) // CONFIG['NUM_SHARD'] * (CONFIG['SHARD_ID'] + 1)
 
     print(f"In shard {CONFIG['SHARD_ID'] + 1}/{CONFIG['N_SHARDS']} ({i}:{j}):")
 
