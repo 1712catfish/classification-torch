@@ -62,3 +62,11 @@ def sys_load_and_resize(CONFIG):
     d = CONFIG.copy()
     d['DATA'] = ids[i:j]
     process(d)
+
+
+BASE_KAGGLE_CONFIG = dict(
+    CSV_PATH='../input/mayo-clinic-strip-ai/',
+    INPUT_PATH='../input/mayo-clinic-strip-ai/train',
+    OUTPUT_PATH='data',
+    N_SHARDS=7,
+)
