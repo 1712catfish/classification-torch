@@ -64,9 +64,10 @@ def sys_load_and_resize(CONFIG):
     process(d)
 
 
-BASE_KAGGLE_CONFIG = dict(
-    CSV_PATH='../input/mayo-clinic-strip-ai/',
-    INPUT_PATH='../input/mayo-clinic-strip-ai/train',
-    OUTPUT_PATH='data',
-    N_SHARDS=7,
-)
+def get_base_kaggle_config():
+    return dict(
+        CSV_PATH='../input/mayo-clinic-strip-ai/',
+        INPUT_PATH='../input/mayo-clinic-strip-ai/train',
+        OUTPUT_PATH='data',
+        N_SHARDS=7,
+    )
