@@ -1,7 +1,4 @@
-try:
-    INTERACTIVE
-except Exception:
-    from setup_libraries import *
+import os
 
 # ENV CONFIGS
 CSV_PATH = '/kaggle/input/mayo-clinic-strip-ai'
@@ -21,21 +18,6 @@ N_CLASSES = len(S2I_LBL_MAP)
 
 TEST_SIZE = 0.2
 BATCH_SIZE = 4
-
-transform = {
-    'train': transforms.Compose([
-        transforms.RandomResizedCrop(IMAGE_SHAPE[0]),
-        transforms.RandomHorizontalFlip(),
-        transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-    ]),
-    'val': transforms.Compose([
-        transforms.Resize(int(1.5 * IMAGE_SHAPE[0])),
-        transforms.CenterCrop(IMAGE_SHAPE[0]),
-        transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-    ]),
-}
 
 # TRAINING CONFIGS
 BACKBONE = 'efficientnet-b4'

@@ -6,6 +6,21 @@ try:
 except Exception:
     from build_utils.data_utils import *
 
+transform = {
+    'train': transforms.Compose([
+        transforms.RandomResizedCrop(IMAGE_SHAPE[0]),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ]),
+    'val': transforms.Compose([
+        transforms.Resize(int(1.5 * IMAGE_SHAPE[0])),
+        transforms.CenterCrop(IMAGE_SHAPE[0]),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ]),
+}
+
 target_transfrom = lambda x: torch.nn.functional.one_hot(x, num_classes=N_CLASSES)
 
 df = pd.read_csv(TRAIN_CSV)
