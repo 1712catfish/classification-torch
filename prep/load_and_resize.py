@@ -17,7 +17,7 @@ def aspect_ratio_shrink(*xs, MIN=None, MAX=None, dtype=int):
 
     if MIN is not None:
         m = min(xs)
-        return (dtype(v / m * MAX) for v in xs)
+        return (dtype(v / m * MIN) for v in xs)
 
     if MAX is not None:
         m = max(xs)
@@ -39,27 +39,25 @@ def rasterio_save(path, image):
         f.write(image)
 
 
-def process(lst):
-    def custom_load(image_id):
-        return image_id, rasterio_load(os.path.join(DATA_PATH, image_id + '.tif'), MIN_LENGTH=1024)
+def process(d):
+    def custom_load(idd):
+        return idd, rasterio_load(os.path.join(d['INPUT_PATH'], idd + '.tif'), MIN_LENGTH=1024)
 
-    with tqdm(total=len(lst)) as pbar:
-        for image_id, image in map(custom_load, lst):
+    with tqdm(total=len(d['DATA'])) as pbar:
+        for iid, image in map(custom_load, d['DATA']):
             print(image.shape)
-            rasterio_save(os.path.join(OUTPUT_PATH, image_id + 'png'), image)
+            rasterio_save(os.path.join(d['OUTPUT_PATH'], iid + 'png'), image)
             gc.collect()
             pbar.update()
 
 
-INPUT_PATH = '../input/mayo-clinic-strip-ai/'
-OUTPUT_PATH = 'data'
-DATA_PATH = '../input/mayo-clinic-strip-ai/train'
-N_SHARDS = 4
-SHARD_ID = 0
+def run(CONFIG):
+    df = pd.read_csv(os.path.join(CONFIG['CSV_PATH'], 'train.csv'))
+    ids = df['image_id']
+    i, j = len(ids) * CONFIG['SHARD_ID'], len(ids) * (CONFIG['SHARD_ID'] + 1)
 
-df = pd.read_csv(os.path.join(INPUT_PATH, 'train.csv'))
-ids = df['image_id']
-i, j = len(ids) * SHARD_ID, len(ids) * (SHARD_ID + 1)
+    print(f"In shard {CONFIG['SHARD_ID'] + 1}/{CONFIG['N_SHARDS']} ({i}:{j}):")
 
-print(f'In shard {SHARD_ID + 1}/{N_SHARDS} ({i}:{j}):')
-process(ids[i:j])
+    d = CONFIG.copy()
+    d['DATA'] = ids[i:j]
+    process(d)
