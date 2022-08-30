@@ -47,6 +47,7 @@ def process(d):
         for iid, image in fast_map(custom_load, d['DATA'], threads_limit=d['THREADS_LIMIT']):
             print(image.shape)
             rasterio_save(os.path.join(d['OUTPUT_PATH'], iid + 'png'), image)
+            del image
             gc.collect()
             pbar.update()
 
