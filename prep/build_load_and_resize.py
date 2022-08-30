@@ -43,7 +43,7 @@ def process(d):
     def custom_load(idd):
         return idd, rasterio_load(os.path.join(d['INPUT_PATH'], idd + '.tif'), MIN_LENGTH=1024)
 
-    print(f'Found {len(d)} datapoints.')
+    print(f"Found {len(d['DATA'])} datapoints.")
 
     with tqdm(total=len(d['DATA'])) as pbar:
         for iid, image in fast_map(custom_load, d['DATA'], threads_limit=d['THREADS_LIMIT']):
